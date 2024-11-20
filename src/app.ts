@@ -22,7 +22,12 @@ app.get('/', (req: Request, res: Response) => {
 
 app.get('/getdata', async (req: Request, res: Response) => {
     try {
-        const response = await axios.get('https://weather.uwyo.edu/cgi-bin/wyowx.fcgi?TYPE=sflist&DATE=current&HOUR=current&UNITS=M&STATION=SBSN', { httpsAgent: agent });
+        const { TYPE, DATE, HOUR, UNITS, STATION } = req.query;
+        
+        let url = `https://weather.uwyo.edu/cgi-bin/wyowx.fcgi?TYPE=${TYPE}&DATE=${(DATE as String).replaceAll("-", "")}&HOUR=${HOUR}&UNITS=${UNITS}&STATION=${STATION}`;
+
+        const response = await axios.get(url, { httpsAgent: agent });
+        
         res.send(response.data);
     } catch (error) {
         console.error(error);
