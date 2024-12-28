@@ -24,5 +24,11 @@
     <div id="results">
         <textarea name="results-display" id="results-display"></textarea>
     </div>
+    
+    <script>
+        const today = new Date().toISOString().split("T")[0];
+
+        document.getElementById('date').setAttribute('max', today);
+    </script>
 </body>
 </html>
