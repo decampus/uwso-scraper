@@ -1,6 +1,7 @@
 window.onload = () => {
     (document.getElementById('results-display') as HTMLTextAreaElement).value = '';
-    (document.getElementById('date') as HTMLInputElement).valueAsDate = new Date();
+    (document.getElementById('start-date') as HTMLInputElement).valueAsDate = new Date();
+    (document.getElementById('end-date') as HTMLInputElement).valueAsDate = new Date();
 }
 
 const form = document.getElementById('search-form') as HTMLFormElement;
@@ -8,15 +9,16 @@ const form = document.getElementById('search-form') as HTMLFormElement;
 form.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const date = (document.getElementById('date') as HTMLInputElement).value;
+    const startDate = (document.getElementById('start-date') as HTMLInputElement).value;
+    const endDate = (document.getElementById('end-date') as HTMLInputElement).value;
     const station = (document.getElementById('station') as HTMLInputElement).value;
-    const resultsDsiplay = (document.getElementById('results-display') as HTMLTextAreaElement);
+    const resultsDisplay = (document.getElementById('results-display') as HTMLTextAreaElement);
 
-    resultsDsiplay.value = '';
+    resultsDisplay.value = '';
 
     const queryParams = new URLSearchParams({
         "TYPE": "sflist", // Make it to be dynamic, maybe. UNITS as well.
-        "DATE": date,
+        "DATE": endDate,
         "HOUR": "23", // Since it gets the info for the whole day, I guess.
         "STATION": station.toUpperCase()
     })

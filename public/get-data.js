@@ -1,18 +1,20 @@
 "use strict";
 window.onload = () => {
     document.getElementById('results-display').value = '';
-    document.getElementById('date').valueAsDate = new Date();
+    document.getElementById('start-date').valueAsDate = new Date();
+    document.getElementById('end-date').valueAsDate = new Date();
 };
 const form = document.getElementById('search-form');
 form.addEventListener('submit', (event) => {
     event.preventDefault();
-    const date = document.getElementById('date').value;
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
     const station = document.getElementById('station').value;
-    const resultsDsiplay = document.getElementById('results-display');
-    resultsDsiplay.value = '';
+    const resultsDisplay = document.getElementById('results-display');
+    resultsDisplay.value = '';
     const queryParams = new URLSearchParams({
         "TYPE": "sflist",
-        "DATE": date,
+        "DATE": endDate,
         "HOUR": "23",
         "STATION": station.toUpperCase()
     });
