@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./get-data.js" defer ></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "dayjs": "https://cdn.skypack.dev/dayjs@1.11.5"
+            }
+        }
+    </script>
+    <script type="module" src="./get-data.js" defer ></script>
     <title>UWSO Scraper</title>
 </head>
 <body>
@@ -30,6 +37,7 @@
     <script>
         const today = new Date().toISOString().split("T")[0];
 
+        document.getElementById('start-date').setAttribute('max', today);
         document.getElementById('end-date').setAttribute('max', today);
     </script>
 </body>
