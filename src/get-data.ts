@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 window.onload = () => {
     (document.getElementById('results-display') as HTMLTextAreaElement).value = '';
     (document.getElementById('start-date') as HTMLInputElement).valueAsDate = new Date();
@@ -6,7 +8,7 @@ window.onload = () => {
 
 const form = document.getElementById('search-form') as HTMLFormElement;
 
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const startDate = (document.getElementById('start-date') as HTMLInputElement).value;
@@ -14,25 +16,19 @@ form.addEventListener('submit', (event) => {
     const station = (document.getElementById('station') as HTMLInputElement).value;
     const resultsDisplay = (document.getElementById('results-display') as HTMLTextAreaElement);
 
+    let duration = calculateTotalDaysBetweenDates(startDate, endDate);
+
     resultsDisplay.value = '';
 
-    const queryParams = new URLSearchParams({
-        "TYPE": "sflist", // Make it to be dynamic, maybe. UNITS as well.
-        "DATE": endDate,
-        "HOUR": "23", // Since it gets the info for the whole day, I guess.
-        "STATION": station.toUpperCase()
-    })
-
-    fetch(`/getdata?${queryParams.toString()}`)
-    .then(response => response.text())
-    .then(data => {
-        const cleanedData = removeHeader(data);
-        displayData(data);
-    })
-    .catch(error => {
-        console.error('Error fetching weather data: ', error);
-        (document.getElementById('results-display') as HTMLTextAreaElement).value = 'Failed to load data.';
-    })
+    if (duration > 1) {
+        getDataForDays(duration, startDate, station);
+    } else {
+        let rawData = await getData(endDate, station);
+        let header = getDataHeader(rawData);
+        let data = get24HoursRows(rawData);
+        
+        displayData(header, data);
+    }
 })
 
 function getDataHeader(data: string) {
@@ -41,6 +37,12 @@ function getDataHeader(data: string) {
     contentArray = contentArray.slice(findStartOfData(contentArray) - 2, findStartOfData(contentArray) + 1);
 
     return contentArray;
+}
+
+function get24HoursRows(data: string) {
+    let slicedData = removeHeader(data).slice(0, 24);
+
+    return slicedData;
 }
 
 function removeHeader(data: string) {
@@ -61,16 +63,60 @@ function findStartOfData(data: string[]) {
     return index + 3;
 }
 
-function displayData(data: string) {
-    const resultsDisplay = (document.getElementById('results-display') as HTMLTextAreaElement);
-    let headerArray = getDataHeader(data);
-    let dataArray = removeHeader(data);
+function calculateTotalDaysBetweenDates(startDate: string, endDate: string) {
+    let date1 = dayjs(startDate);
+    let date2 = dayjs(endDate);
 
-    for (let line of headerArray) {
+    return date2.diff(date1, 'day') + 1;
+}
+
+async function fetchData(queryParams: URLSearchParams) {
+    try {
+        const response = await fetch(`/getdata?${queryParams.toString()}`)
+
+        if (!response.ok) {
+            throw new Error(`HTTP error status: ${response.status}`);
+        }
+
+        const data = await response.text();
+
+        return data;
+    } catch (error) {
+        console.log('Error fetching weather data: ', error);
+        return 'Failed to load data.';
+    }
+}
+
+function getDataForDays(duration: number, startDate: string, station: string) {
+    
+}
+
+async function getData(date: string, station: string) {
+    const queryParams = new URLSearchParams({
+        "TYPE": "sflist", // Make it to be dynamic, maybe. UNITS as well.
+        "DATE": date,
+        "HOUR": "23", // Since it gets the info for the whole day, I guess.
+        "STATION": station.toUpperCase()
+    })
+    
+    try {
+        const result = await fetchData(queryParams);
+
+        return result || 'No data received.';
+    } catch (error) {
+        console.error('Error: ', error);
+        return 'An unexpected error occurred.';
+    }
+}
+
+function displayData(header: string[], data: string[]) {
+    const resultsDisplay = (document.getElementById('results-display') as HTMLTextAreaElement);
+
+    for (let line of header) {
         resultsDisplay.value += line + '\n';
     }
 
-    for (let line of dataArray) {
+    for (let line of data) {
         resultsDisplay.value += line + '\n';
     }
 }
