@@ -21,7 +21,9 @@ form.addEventListener('submit', async (event) => {
     resultsDisplay.value = '';
 
     if (duration > 1) {
-        getDataForDays(duration, startDate, station);
+        let data = await getDataForDays(duration, startDate, station);
+
+        displayData(data.header, data.data);
     } else {
         let rawData = await getData(endDate, station);
         let header = getDataHeader(rawData);
@@ -67,7 +69,7 @@ function calculateTotalDaysBetweenDates(startDate: string, endDate: string) {
     let date1 = dayjs(startDate);
     let date2 = dayjs(endDate);
 
-    return date2.diff(date1, 'day') + 1;
+    return date2.diff(date1, 'day');
 }
 
 async function fetchData(queryParams: URLSearchParams) {
@@ -87,8 +89,33 @@ async function fetchData(queryParams: URLSearchParams) {
     }
 }
 
-function getDataForDays(duration: number, startDate: string, station: string) {
-    
+async function getDataForDays(duration: number, startDate: string, station: string) {
+    let data = await getData(startDate, station);
+    let header = getDataHeader(data);
+    let content = removeHeader(data).slice(0, 24);
+    let final:string[] = content;
+
+    let date = dayjs(startDate);
+
+    for (let i = 0; i < duration; i++) {
+        date = date.add(1, 'day');
+        let newContent = await getData(date.toISOString().split('T')[0], station);
+        let newContentNoHeader = removeHeader(newContent).slice(0, 24);
+
+        final = final.concat(newContentNoHeader)
+
+        console.log("Iteration: ", i);
+        console.log(final);
+    }
+
+    //console.log(final)
+
+    // console.log(final);
+
+    return {
+        'header': header,
+        'data': final
+    };
 }
 
 async function getData(date: string, station: string) {

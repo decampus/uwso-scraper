@@ -14,7 +14,8 @@ form.addEventListener('submit', async (event) => {
     let duration = calculateTotalDaysBetweenDates(startDate, endDate);
     resultsDisplay.value = '';
     if (duration > 1) {
-        getDataForDays(duration, startDate, station);
+        let data = await getDataForDays(duration, startDate, station);
+        displayData(data.header, data.data);
     }
     else {
         let rawData = await getData(endDate, station);
@@ -47,7 +48,7 @@ function findStartOfData(data) {
 function calculateTotalDaysBetweenDates(startDate, endDate) {
     let date1 = dayjs(startDate);
     let date2 = dayjs(endDate);
-    return date2.diff(date1, 'day') + 1;
+    return date2.diff(date1, 'day');
 }
 async function fetchData(queryParams) {
     try {
@@ -63,7 +64,24 @@ async function fetchData(queryParams) {
         return 'Failed to load data.';
     }
 }
-function getDataForDays(duration, startDate, station) {
+async function getDataForDays(duration, startDate, station) {
+    let data = await getData(startDate, station);
+    let header = getDataHeader(data);
+    let content = removeHeader(data).slice(0, 24);
+    let final = content;
+    let date = dayjs(startDate);
+    for (let i = 0; i < duration; i++) {
+        date = date.add(1, 'day');
+        let newContent = await getData(date.toISOString().split('T')[0], station);
+        let newContentNoHeader = removeHeader(newContent).slice(0, 24);
+        final = final.concat(newContentNoHeader);
+        console.log("Iteration: ", i);
+        console.log(final);
+    }
+    return {
+        'header': header,
+        'data': final
+    };
 }
 async function getData(date, station) {
     const queryParams = new URLSearchParams({
