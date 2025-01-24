@@ -1,0 +1,50 @@
+@use "../../node_modules/@picocss/pico/scss" with (
+    $theme-color: "violet"
+);
+
+:root {
+  --pico-font-size: 16px;
+  --pico-font-weight: 500;
+}
+
+#search-form {
+  //display: flex;
+  //width: 100%;
+  ////grid-template-columns: repeat(3, 1fr) 0.5fr;
+  //align-items: center;
+}
+
+.option-bar {
+  //grid-template-columns: repeat(3, 1fr) 0.5fr;
+  //display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 15px;
+  align-items: center;
+}
+
+.option-bar-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.submit {
+  justify-self: flex-end;
+}
+
+input[type=submit] {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.container {
+  width: 80%;
+}
+
+textarea {
+  height: 60vh;
+  margin: 0 auto;
+  font-family: Reddit Mono, serif;
+  font-style: normal;
+  font-size: 14px;
+}
