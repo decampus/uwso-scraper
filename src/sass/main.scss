@@ -7,16 +7,12 @@
   --pico-font-weight: 500;
 }
 
-#search-form {
-  //display: flex;
-  //width: 100%;
-  ////grid-template-columns: repeat(3, 1fr) 0.5fr;
-  //align-items: center;
+h1 {
+  padding: 8px 30px;
+  margin-bottom: 0;
 }
 
 .option-bar {
-  //grid-template-columns: repeat(3, 1fr) 0.5fr;
-  //display: flex;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto;
   gap: 15px;
@@ -32,7 +28,8 @@
   justify-self: flex-end;
 }
 
-input[type=submit] {
+button {
+  width: 115px;
   margin-top: 12px;
   margin-bottom: 0;
 }

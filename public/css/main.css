@@ -2778,6 +2778,11 @@ textarea,
   --pico-font-weight: 500;
 }
 
+h1 {
+  padding: 8px 30px;
+  margin-bottom: 0;
+}
+
 .option-bar {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto;
@@ -2794,7 +2799,8 @@ textarea,
   justify-self: flex-end;
 }
 
-input[type=submit] {
+button {
+  width: 115px;
   margin-top: 12px;
   margin-bottom: 0;
 }

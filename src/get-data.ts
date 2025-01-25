@@ -21,13 +21,17 @@ form.addEventListener('submit', async (event) => {
     resultsDisplay.value = '';
 
     if (duration > 1) {
+        loadingButton();
         let data = await getDataForDays(duration, startDate, station);
+        loadingButtonDismiss();
 
         displayData(data.header, data.data);
     } else {
+        loadingButton();
         let rawData = await getData(endDate, station);
         let header = getDataHeader(rawData);
         let data = get24HoursRows(rawData);
+        loadingButtonDismiss();
         
         displayData(header, data);
     }
@@ -102,15 +106,8 @@ async function getDataForDays(duration: number, startDate: string, station: stri
         let newContent = await getData(date.toISOString().split('T')[0], station);
         let newContentNoHeader = removeHeader(newContent).slice(0, 24);
 
-        final = final.concat(newContentNoHeader)
-
-        console.log("Iteration: ", i);
-        console.log(final);
+        final = final.concat(newContentNoHeader);
     }
-
-    //console.log(final)
-
-    // console.log(final);
 
     return {
         'header': header,
@@ -146,4 +143,18 @@ function displayData(header: string[], data: string[]) {
     for (let line of data) {
         resultsDisplay.value += line + '\n';
     }
+}
+
+function loadingButton() {
+    const button = document.getElementById('submit-button') as HTMLButtonElement;
+
+    button.ariaBusy = 'true';
+    button.textContent = 'Wait...';
+}
+
+function loadingButtonDismiss() {
+    const button = document.getElementById('submit-button') as HTMLButtonElement;
+
+    button.ariaBusy = 'false';
+    button.textContent = 'Get results';
 }
