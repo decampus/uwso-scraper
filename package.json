@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node public/app.js",
-    "dev": "nodemon public/app.js",
+    "dev": "concurrently 'tsc -w' 'nodemon public/app.js'",
     "sass-compile": "sass src/sass:public/css",
     "sass-compile-watch": "sass --watch src/sass:public/css"
   },
@@ -24,6 +24,7 @@
   "dependencies": {
     "@picocss/pico": "^2.0.6",
     "axios": "^1.7.7",
+    "concurrently": "^9.1.2",
     "dayjs": "^1.11.13",
     "express": "^4.21.1"
   }
