@@ -2,8 +2,8 @@ import dayjs from 'dayjs';
 
 window.onload = () => {
     (document.getElementById('results-display') as HTMLTextAreaElement).value = '';
-    (document.getElementById('start-date') as HTMLInputElement).valueAsDate = new Date('2025-01-15T00:00:00');
-    (document.getElementById('end-date') as HTMLInputElement).valueAsDate = new Date('2025-01-19T00:00:00');
+    (document.getElementById('start-date') as HTMLInputElement).valueAsDate = new Date();
+    (document.getElementById('end-date') as HTMLInputElement).valueAsDate = new Date();
 }
 
 const form = document.getElementById('search-form') as HTMLFormElement;

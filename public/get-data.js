@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 window.onload = () => {
     document.getElementById('results-display').value = '';
-    document.getElementById('start-date').valueAsDate = new Date('2025-01-15T00:00:00');
-    document.getElementById('end-date').valueAsDate = new Date('2025-01-19T00:00:00');
+    document.getElementById('start-date').valueAsDate = new Date();
+    document.getElementById('end-date').valueAsDate = new Date();
 };
 const form = document.getElementById('search-form');
 const fullHeader = [
